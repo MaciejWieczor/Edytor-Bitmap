@@ -8,13 +8,22 @@ import os
 
 class GUI:
     def __init__(self):
-        self.window = self.window_init()
-        self.obrazek_name = self.browseFiles()
-        self.image = self.image()
-        self.size = self.image.size
-        self.width = self.size[0]+30
+        self.window = self.window_init()        #ramka do gui na której wszystko jest
+
+        self.obrazek_name = self.browseFiles()  #path do zdjęcia
+
+        self.image = self.image()               #obrazek w module PILLOW czyli można
+                                                #choćby go zamieniać na array poprzez
+                                                #numpy (funkcja asarray(self.image))
+                                                #ten array ma wtedy wymiary
+                                                #[linijka][piksel][rgb] z tego co 
+                                                #rozumiem
+
+        self.size = self.image.size             #tu już takie logiczne parametry
+        self.width = self.size[0]+30            
         self.height = self.size[1]+30
-        self.canvas = self.canvas_init()
+        self.canvas = self.canvas_init()        #na końcu canvas na którym wyświetla
+                                                #się obrazki
         
     def window_init(self):
         return tkinter.Tk()
