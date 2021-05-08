@@ -21,11 +21,11 @@ class GUI:
 
     def image(self):
         image = PIL.Image.open(self.obrazek_name)
-        return image
+        return image         #ładuje image przez PIL z browseFiles
 
     def canvas_init(self):
         canvas = tkinter.Canvas(self.window, width = self.width, height = self.height, highlightthickness=1, highlightbackground="black")
-        return canvas
+        return canvas   #inicjalizuje canvas na bazie rozmiaru zdjęcia
 
     @staticmethod
     def browseFiles():
@@ -38,20 +38,21 @@ class GUI:
       
         # Change label contents
         print(filename)
-        return filename
+        return filename       #handler przycisku wczytania pierwszego obrazka
 
     @staticmethod
     def reset():
         python = sys.executable
-        os.execl(python, python, * sys.argv)
+        os.execl(python, python, * sys.argv)             #handler przycisku wczytania nowego obrazka
 
     def save(self):
         filename = filedialog.asksaveasfile(mode='w', defaultextension=".jpg")
         if not filename:
             return
-        self.image.save(filename)
+        self.image.save(filename)          #handler przycisku zapisania
 
-    def resize(self, mod):
+    def resize(self, mod):      #funkcja do zmiany rozmiaru - trochę do 
+                                #poprawy bo kiepsko skaluje
         self.image = self.image.resize((int(self.width*mod), int(self.height*mod)))
         self.size = self.image.size
         self.width = self.size[0]+30
