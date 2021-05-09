@@ -33,7 +33,8 @@ class GUI:
         return image         #ładuje image przez PIL z browseFiles
 
     def canvas_init(self):
-        canvas = tkinter.Canvas(self.window, width = self.width, height = self.height, highlightthickness=1, highlightbackground="black")
+        sizee = max(self.size)+30
+        canvas = tkinter.Canvas(self.window, width = sizee, height = sizee, highlightthickness=1, highlightbackground="black")
         return canvas   #inicjalizuje canvas na bazie rozmiaru zdjęcia
 
     @staticmethod
