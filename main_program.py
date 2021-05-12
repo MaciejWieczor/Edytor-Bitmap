@@ -61,6 +61,25 @@ def resize1():
     img = ImageTk.PhotoImage(root.image)
     image_id = root.canvas.create_image(20,20, anchor = tk.NW, image=img) 
 
+def rotate_right():
+
+    global image_id
+    global img
+    root.canvas.delete(image_id)
+    root.rotate("right")
+    img = ImageTk.PhotoImage(root.image)
+    image_id = root.canvas.create_image(20,20, anchor = tk.NW, image=img) 
+
+def rotate_left():
+
+    global image_id
+    global img
+    root.canvas.delete(image_id)
+    root.rotate("left")
+    img = ImageTk.PhotoImage(root.image)
+    image_id = root.canvas.create_image(20,20, anchor = tk.NW, image=img) 
+    
+
 #przyciski
 #tu można definiować nowe przyciski tak jak widać poniżej
 
@@ -78,6 +97,11 @@ plus_size_button = tk.Button(root.window, text="+", command=resize)
 plus_size_button.pack(before = root.canvas)
 minus_size_button = tk.Button(root.window, text="-", command=resize1)
 minus_size_button.pack(before = root.canvas)
+
+rotate_right_button = tk.Button(root.window, text="rotate right", command=rotate_right)
+rotate_right_button.pack(before = root.canvas)
+rotate_left_button = tk.Button(root.window, text="rotate left", command=rotate_left)
+rotate_left_button.pack(before = root.canvas)
 
 root.window.mainloop()
 
