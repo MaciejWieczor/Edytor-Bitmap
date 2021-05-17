@@ -67,5 +67,12 @@ class GUI:
         self.size = self.image.size
         self.width = self.size[0]+30
         self.height = self.size[1]+30
-    
+
+    def rotate(self, direction):
+        if(direction == "right"):
+            self.image = self.image.transpose(Image.ROTATE_270)
+        elif(direction == "left"):
+            self.image = self.image.transpose(Image.ROTATE_90)
+        self.size = self.image.size
+        self.width, self.height = self.height, self.width
         
