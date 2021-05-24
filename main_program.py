@@ -77,8 +77,15 @@ def rotate_left():
     root.canvas.delete(image_id)
     root.rotate("left")
     img = ImageTk.PhotoImage(root.image)
-    image_id = root.canvas.create_image(20,20, anchor = tk.NW, image=img) 
+    image_id = root.canvas.create_image(20,20, anchor = tk.NW, image=img)
+
+def undo():
     
+    global image_id
+    global img
+    root.undo()
+    img = ImageTk.PhotoImage(root.image)
+    image_id = root.canvas.create_image(20,20, anchor = tk.NW, image=img)
 
 #przyciski
 #tu można definiować nowe przyciski tak jak widać poniżej
@@ -97,6 +104,8 @@ plus_size_button = tk.Button(root.window, text="+", command=resize)
 plus_size_button.pack(before = root.canvas)
 minus_size_button = tk.Button(root.window, text="-", command=resize1)
 minus_size_button.pack(before = root.canvas)
+undo_button = tk.Button(root.window, text="undo", command=undo)
+undo_button.pack(before = root.canvas)
 
 rotate_right_button = tk.Button(root.window, text="rotate right", command=rotate_right)
 rotate_right_button.pack(before = root.canvas)

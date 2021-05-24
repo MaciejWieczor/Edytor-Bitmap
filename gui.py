@@ -24,6 +24,9 @@ class GUI:
         self.height = self.size[1]+30
         self.canvas = self.canvas_init()        #na końcu canvas na którym wyświetla
                                                 #się obrazki
+
+        self.undo_queue = []
+        self.undo_queue.append(self.image)
         
     def window_init(self):
         return tkinter.Tk()
@@ -68,6 +71,8 @@ class GUI:
         self.width = self.size[0]+30
         self.height = self.size[1]+30
 
+        self.undo_queue.append(self.image)
+
     def rotate(self, direction):
         if(direction == "right"):
             self.image = self.image.transpose(Image.ROTATE_270)
@@ -75,4 +80,15 @@ class GUI:
             self.image = self.image.transpose(Image.ROTATE_90)
         self.size = self.image.size
         self.width, self.height = self.height, self.width
-        
+
+        self.undo_queue.append(self.image)
+
+    def undo(self):
+        if(len(self.undo_queue) > 1):
+            self.image = self.undo_queue[len(self.undo_queue) - 2]
+            self.undo_queue.pop()
+            self.size = self.image.size
+            self.width = self.size[0]+30
+            self.height = self.size[1]+30
+        if(len(self.undo_queue) > 10): # pamieta tylko 10 ostanich obrazow
+            self.undo_queue.pop(0)
