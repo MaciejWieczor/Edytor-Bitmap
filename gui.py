@@ -92,3 +92,14 @@ class GUI:
             self.height = self.size[1]+30
         if(len(self.undo_queue) > 10): # pamieta tylko 10 ostanich obrazow
             self.undo_queue.pop(0)
+
+    def RGB_levels(self, R, G, B):
+        
+        if(R <= 2 and G <= 2 and B <= 2):
+            px = self.image.load()        ##zwaraca tablice krotek rgb, jak sie zmieni krotke, automatycznie sie zmieni pixel na self.image 
+
+            print(R, G, B)
+
+            for i in range(0, self.image.size[0]):
+                for j in range(0, self.image.size[1]):
+                    px[i,j] = (int(px[i,j][0] * R), int(px[i,j][1] * G), int(px[i,j][2] * B))
