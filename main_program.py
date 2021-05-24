@@ -44,7 +44,7 @@ def resize():
     root.canvas.delete(image_id)
 
     #operacja na obiekcie
-    root.resize(0.1)
+    root.resize(1.1)
 
     #załadowanie obrazka do zmiennej którą 
     #zrozumie gui (przez to ImageTk)
@@ -57,7 +57,7 @@ def resize1():
     global image_id
     global img
     root.canvas.delete(image_id)
-    root.resize(-0.1)
+    root.resize(0.9)
     img = ImageTk.PhotoImage(root.image)
     image_id = root.canvas.create_image(20,20, anchor = tk.NW, image=img) 
 

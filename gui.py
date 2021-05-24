@@ -19,19 +19,15 @@ class GUI:
                                                 #[linijka][piksel][rgb] z tego co 
                                                 #rozumiem
 
-        self.original_image = self.image        #oryginalny obrazek bez zmian
-
         self.size = self.image.size             #tu już takie logiczne parametry
         self.width = self.size[0]+30            
         self.height = self.size[1]+30
         self.canvas = self.canvas_init()        #na końcu canvas na którym wyświetla
                                                 #się obrazki
 
-        self.mod = 1.0                          #zmienna do skalowania, trzyma obecny rozmiar
-        self.orientation = 0                     #obecna orientacja 0 = 0stopni, 1 = 90stopni, 2 = 180stopni 3 = 270stopni
+        self.undo_queue = []
+        self.undo_queue.append(self.image)
         
-        self.undo_list = [[self.mod, self.orientation]]
-
     def window_init(self):
         return tkinter.Tk()
 
@@ -68,66 +64,29 @@ class GUI:
             return
         self.image.save(filename)          #handler przycisku zapisania
 
-
-    #ogolnie to zamysl jest taki, ze jezeli chcemy miec bezstratne transformacje, wykonywane na podstawie oryginalu
-    #to wszystkie operacje trzeba wykonac od 0 po kolei, i w tym celu bedzie jakis wektor (albo pare zmiennych) stanu i jedna wielka funkcja ktora to wszystko wykona  
-    #bo jak na przyklad zrobisz resize jak tutaj na oryginale to obroty stracisz, a poniewaz tylko kilka transformacji mamy miec, to moze takie cos da rade
-    #jednak nwm jak to bedzie jak sie doda to wybieranie obszaru itp, najwyzej sie to zleje i zrobi lopatologicznie
-    #na razie zrobie tak, ze funkcje wejsciowe zmieniaja parametry, i wywoluja jedna duza funkcje co wykona te transformacje
-
-
     def resize(self, mod):      #funkcja do zmiany rozmiaru - trochę do 
-                                    #poprawy bo kiepsko skaluje
-        self.mod = self.mod + mod
-        self.__transformacja()
-
-    def rotate(self, direction):
-        if(direction == "right"):
-            self.orientation -= 1
-        elif(direction == "left"):
-            self.orientation += 1
-        if(self.orientation == -1):
-            self.orientation = 3
-        elif(self.orientation == 4):
-            self.orientation = 0
-        self.__transformacja()
-
-    def undo(self):
-        if(len(self.undo_list) > 1):
-
-            self.mod = self.undo_list[len(self.undo_list) - 2][0]
-            self.orientation = self.undo_list[len(self.undo_list) - 2][1]
-
-            self.undo_list.pop()
-            self.__transformacja()
-            self.undo_list.pop()
-
-    def __transformacja(self):
-        
-        wektor_zmian = []
-
-        #skalowanie
-        self.image = self.original_image.resize((int(self.original_image.size[0]*self.mod), int(self.original_image.size[1]*self.mod)))
+                                #poprawy bo kiepsko skaluje
+        self.image = self.image.resize((int(self.width*mod), int(self.height*mod)))
         self.size = self.image.size
-        
-        wektor_zmian.append(self.mod)
-
-        #obrot
-        if(self.orientation == 1):
-            self.image = self.image.transpose(Image.ROTATE_90)
-        elif(self.orientation == 2):
-            self.image = self.image.transpose(Image.ROTATE_180)
-        elif(self.orientation == 3):
-            self.image = self.image.transpose(Image.ROTATE_270)
-        
-        wektor_zmian.append(self.orientation)
-
         self.width = self.size[0]+30
         self.height = self.size[1]+30
 
-        #zapisanie obrazka do pamieci
-        self.undo_list.append(wektor_zmian)
-        if(len(self.undo_list) > 5):     #na razie dam aby 5 ostatnich zmian pamietal
-            self.undo_list.pop(0)
+        self.undo_queue.append(self.image)
 
-        print(len(self.undo_list))
+    def rotate(self, direction):
+        if(direction == "right"):
+            self.image = self.image.transpose(Image.ROTATE_270)
+        elif(direction == "left"):
+            self.image = self.image.transpose(Image.ROTATE_90)
+        self.size = self.image.size
+        self.width, self.height = self.height, self.width
+
+        self.undo_queue.append(self.image)
+
+    def undo(self):
+        if(len(self.undo_queue) > 1):
+            self.image = self.undo_queue[len(self.undo_queue) - 2]
+            self.undo_queue.pop()
+            self.size = self.image.size
+            self.width = self.size[0]+30
+            self.height = self.size[1]+30
