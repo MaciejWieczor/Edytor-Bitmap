@@ -90,3 +90,5 @@ class GUI:
             self.size = self.image.size
             self.width = self.size[0]+30
             self.height = self.size[1]+30
+        if(len(self.undo_queue) > 10): # pamieta tylko 10 ostanich obrazow
+            self.undo_queue.pop(0)
