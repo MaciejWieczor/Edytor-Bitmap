@@ -87,16 +87,6 @@ def undo():
     img = ImageTk.PhotoImage(root.image)
     image_id = root.canvas.create_image(20,20, anchor = tk.NW, image=img)
 
-def RGB_levels():
-
-    global image_id
-    global img
-
-    root.RGB_levels(R=2, G=1, B=1) ## tu trzeba dac te suwaki, aby zmieniac te wartosci, przez ktore sa skalowane kanaly
-    img = ImageTk.PhotoImage(root.image)
-
-    image_id = root.canvas.create_image(20,20, anchor = tk.NW, image=img)
-
 
 #przyciski
 #tu można definiować nowe przyciski tak jak widać poniżej
@@ -123,10 +113,6 @@ rotate_right_button.pack(before = root.canvas)
 rotate_left_button = tk.Button(root.window, text="rotate left", command=rotate_left)
 rotate_left_button.pack(before = root.canvas)
 
-
-##test jest tylko po to aby wywolywac funkcje, mozna usunac jak dasz jakies suwaki
-test = tk.Button(root.window, text="test", command=RGB_levels)
-test.pack(before = root.canvas)
 
 root.window.mainloop()
 
