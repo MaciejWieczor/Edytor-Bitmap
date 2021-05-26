@@ -74,10 +74,22 @@ class GUI:
         self.undo_queue.append(self.image)
 
     def rotate(self, direction):
+
+        tmp = PIL.Image.new("RGB", (self.size[1], self.size[0]), 0)
+        tmp_px = tmp.load()
+        original_px = self.image.load()
+
         if(direction == "right"):
-            self.image = self.image.transpose(Image.ROTATE_270)
+            for i in range(0, self.size[0]):
+                for j in range(0, self.size[1]):
+                    tmp_px[self.size[1] - 1 - j, i] = original_px[i, j]
+
         elif(direction == "left"):
-            self.image = self.image.transpose(Image.ROTATE_90)
+            for i in range(0, self.size[0]):
+                for j in range(0, self.size[1]):
+                    tmp_px[j, self.size[0] - 1 - i] = original_px[i, j]
+
+        self.image = tmp
         self.size = self.image.size
         self.width, self.height = self.height, self.width
 
@@ -97,8 +109,6 @@ class GUI:
         
         if(R <= 2 and G <= 2 and B <= 2):
             px = self.image.load()        ##zwaraca tablice krotek rgb, jak sie zmieni krotke, automatycznie sie zmieni pixel na self.image 
-
-            print(R, G, B)
 
             for i in range(0, self.image.size[0]):
                 for j in range(0, self.image.size[1]):
