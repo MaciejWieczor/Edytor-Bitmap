@@ -103,3 +103,5 @@ class GUI:
             for i in range(0, self.image.size[0]):
                 for j in range(0, self.image.size[1]):
                     px[i,j] = (int(px[i,j][0] * R), int(px[i,j][1] * G), int(px[i,j][2] * B))
+
+        self.undo_queue.append(self.image)
