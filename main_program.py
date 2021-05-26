@@ -87,6 +87,7 @@ def undo():
     img = ImageTk.PhotoImage(root.image)
     image_id = root.canvas.create_image(20,20, anchor = tk.NW, image=img)
 
+
 #przyciski
 #tu można definiować nowe przyciski tak jak widać poniżej
 
@@ -111,6 +112,7 @@ rotate_right_button = tk.Button(root.window, text="rotate right", command=rotate
 rotate_right_button.pack(before = root.canvas)
 rotate_left_button = tk.Button(root.window, text="rotate left", command=rotate_left)
 rotate_left_button.pack(before = root.canvas)
+
 
 root.window.mainloop()
 
