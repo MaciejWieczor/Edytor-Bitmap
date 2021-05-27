@@ -5,6 +5,8 @@ from PIL import ImageTk
 from PIL import Image
 import sys
 import os
+import math
+import statistics
 
 class GUI:
     def __init__(self):
@@ -115,3 +117,37 @@ class GUI:
                     px[i,j] = (int(px[i,j][0] * R), int(px[i,j][1] * G), int(px[i,j][2] * B))
 
         self.undo_queue.append(self.image)
+
+    def median_filter(self, size):
+
+        tmp = PIL.Image.new("RGB", (self.size[0], self.size[1]), 0)
+        tmp_px = tmp.load()
+        original_px = self.image.load()
+
+        if(size%2 == 0): ##niech bierze tylko nieparzyste okna na razie
+            size = size - 1
+
+        t = math.floor(size/2)
+        R = []
+        G = []
+        B = []
+
+        for i in range(0, self.size[0]):
+            for j in range(0, self.size[1]):
+
+                ##petle to ladowania wartosci z okna
+                for x in range (0, size):
+                    for y in range(0, size):
+                        if(j + y < self.size[1] and i + x < self.size[0] and x >= 0 and y >= 0):
+                            ##print(x,y)
+                            R.append(original_px[i - t + x, j - t + y][0])
+                            G.append(original_px[i - t + x, j - t + y][1])
+                            B.append(original_px[i - t + x, j - t + y][2])
+
+                ##print(R, G, B)
+                tmp_px[i, j] = (int(statistics.median(R)), int(statistics.median(G)), int(statistics.median(B)))
+                R.clear()
+                G.clear()
+                B.clear()
+
+        self.image = tmp
