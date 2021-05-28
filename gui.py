@@ -111,14 +111,14 @@ class GUI:
 
         if(R <= 2 and G <= 2 and B <= 2):
 
-            tmp = self.image
+            tmp = self.image.copy()
             px = tmp.load()        ##zwaraca tablice krotek rgb, jak sie zmieni krotke, automatycznie sie zmieni pixel na self.image 
 
-            for i in range(0, self.image.size[0]):
-                for j in range(0, self.image.size[1]):
+            for i in range(0, tmp.size[0]):
+                for j in range(0, tmp.size[1]):
                     px[i,j] = (int(px[i,j][0] * R), int(px[i,j][1] * G), int(px[i,j][2] * B))
+            self.undo_queue.append(tmp)
             self.image = tmp
-            self.undo_queue.append(self.image)
 
     def median_filter(self, size):
 
