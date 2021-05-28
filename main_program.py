@@ -119,7 +119,7 @@ def rgb_slider():
         print(f"R = {slider_var_R}, G = {slider_var_G}, B = {slider_var_B} ")
     except:
         return None
-    #tu miejsce na funkcję z rgb
+    root.RGB_levels(slider_var_R,  slider_var_G,  slider_var_B)
     img = ImageTk.PhotoImage(root.image)
     image_id = root.canvas.create_image(20,20, anchor = tk.NW, image=img)
 
@@ -153,15 +153,15 @@ med_window.pack(side = tk.LEFT)
 
 slide_RGB_label1 = tk.Label(slideframe , text = 'R', font=('calibre',10, 'bold'))
 slide_RGB_label1.pack(side = tk.LEFT)
-slide_RGB1 = tk.Scale(slideframe, from_=1, to=2 , resolution = 0.1, orient=tk.HORIZONTAL)
+slide_RGB1 = tk.Scale(slideframe, from_=0, to=2 , resolution = 0.1, orient=tk.HORIZONTAL)
 slide_RGB1.pack(side = tk.LEFT)
 slide_RGB_label2 = tk.Label(slideframe , text = 'G', font=('calibre',10, 'bold'))
 slide_RGB_label2.pack(side = tk.LEFT)
-slide_RGB2 = tk.Scale(slideframe, from_=1, to=2 , resolution = 0.1, orient=tk.HORIZONTAL)
+slide_RGB2 = tk.Scale(slideframe, from_=0, to=2 , resolution = 0.1, orient=tk.HORIZONTAL)
 slide_RGB2.pack(side = tk.LEFT)
 slide_RGB_label3 = tk.Label(slideframe , text = 'B', font=('calibre',10, 'bold'))
 slide_RGB_label3.pack(side = tk.LEFT)
-slide_RGB3 = tk.Scale(slideframe, from_=1, to=2 , resolution = 0.1, orient=tk.HORIZONTAL)
+slide_RGB3 = tk.Scale(slideframe, from_=0, to=2 , resolution = 0.1, orient=tk.HORIZONTAL)
 slide_RGB3.pack(side = tk.LEFT)
 
 exit_button = tk.Button(upperframe, text="Exit", command=root.window.destroy)

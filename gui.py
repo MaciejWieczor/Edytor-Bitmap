@@ -68,7 +68,7 @@ class GUI:
 
     def resize(self, mod):      #funkcja do zmiany rozmiaru - trochę do 
                                 #poprawy bo kiepsko skaluje
-        self.image = self.image.resize((int(self.width*mod), int(self.height*mod)))
+        self.image = self.image.resize((int(self.size[0]*mod), int(self.size[1]*mod)))
         self.size = self.image.size
         self.width = self.size[0]+30
         self.height = self.size[1]+30
@@ -108,15 +108,17 @@ class GUI:
             self.undo_queue.pop(0)
 
     def RGB_levels(self, R, G, B):
-        
+
         if(R <= 2 and G <= 2 and B <= 2):
-            px = self.image.load()        ##zwaraca tablice krotek rgb, jak sie zmieni krotke, automatycznie sie zmieni pixel na self.image 
+
+            tmp = self.image
+            px = tmp.load()        ##zwaraca tablice krotek rgb, jak sie zmieni krotke, automatycznie sie zmieni pixel na self.image 
 
             for i in range(0, self.image.size[0]):
                 for j in range(0, self.image.size[1]):
                     px[i,j] = (int(px[i,j][0] * R), int(px[i,j][1] * G), int(px[i,j][2] * B))
-
-        self.undo_queue.append(self.image)
+            self.image = tmp
+            self.undo_queue.append(self.image)
 
     def median_filter(self, size):
 
