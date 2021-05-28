@@ -19,7 +19,8 @@ root = GUI()
 root.canvas.pack()
 img = ImageTk.PhotoImage(root.image)
 image_id = root.canvas.create_image(20,20, anchor = tk.NW, image=img) 
-
+size_var = 4        #domyślna wartość szerokości okna filtru medianowego
+slider_var = 1      #domyślna wartość na sliderze
 #funkcje poniżej są do przycisków zdefiniowanych na dole 
 
 #funkcje zdefiniowałem poniżej bo 
@@ -87,11 +88,31 @@ def undo():
     img = ImageTk.PhotoImage(root.image)
     image_id = root.canvas.create_image(20,20, anchor = tk.NW, image=img)
 
-def test():
+def filtr_med_func():
 
     global image_id
     global img
-    root.median_filter(4)
+    global size_var
+    try:
+        size_var = int(size_varr.get())
+    except:
+        return None
+    
+    root.median_filter(size_var)
+    img = ImageTk.PhotoImage(root.image)
+    image_id = root.canvas.create_image(20,20, anchor = tk.NW, image=img)
+
+def rgb_slider():
+
+    global image_id
+    global img
+    global slider_var
+    try:
+        slider_var = slide_RGB.get()
+        print(slider_var)
+    except:
+        return None
+    #tu miejsce na funkcję z rgb
     img = ImageTk.PhotoImage(root.image)
     image_id = root.canvas.create_image(20,20, anchor = tk.NW, image=img)
 
@@ -109,6 +130,19 @@ upperframe.pack(before = root.canvas)
 
 functionframe = tk.Frame(root.window)
 functionframe.pack(before = root.canvas)
+
+fieldframe = tk.Frame(root.window)
+fieldframe.pack(before = root.canvas)
+
+
+size_varr=tk.StringVar(value=str(size_var))
+med_window = tk.Label(fieldframe , text = 'Długość okna filtru medianowego', font=('calibre',10, 'bold'))
+med_window = tk.Entry(fieldframe ,textvariable = size_varr, font=('calibre',10,'normal'))
+med_window.pack(side = tk.LEFT)
+med_window.pack(side = tk.LEFT)
+
+slide_RGB = tk.Scale(fieldframe, from_=1, to=2 , resolution = 0.1, orient=tk.HORIZONTAL)
+slide_RGB.pack(side = tk.LEFT)
 
 exit_button = tk.Button(upperframe, text="Exit", command=root.window.destroy)
 exit_button.pack(side = tk.LEFT)
@@ -129,8 +163,11 @@ rotate_left_button = tk.Button(functionframe, text="rotate left", command=rotate
 rotate_left_button.pack(side = tk.LEFT)
 
 ##przyciski do testowania filtru, trzeba dodac przyciskt i pole do wyboru rozmiaru okna
-test = tk.Button(root.window, text="test", command=test)
-test.pack(before = root.canvas)
+filtr_med = tk.Button(functionframe, text="Filtr Medianowy", command=filtr_med_func)
+filtr_med.pack(side = tk.LEFT)
+
+RGB_button = tk.Button(functionframe, text="Korekta RGB", command=rgb_slider)
+RGB_button.pack(side = tk.LEFT)
 
 
 root.window.mainloop()
