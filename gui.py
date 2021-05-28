@@ -138,13 +138,10 @@ class GUI:
                 ##petle to ladowania wartosci z okna
                 for x in range (0, size):
                     for y in range(0, size):
-                        if(j + y < self.size[1] and i + x < self.size[0] and x >= 0 and y >= 0):
-                            ##print(x,y)
+                        if(j + y <= self.size[1] and i + x <= self.size[0] and i - t + x >= 0 and j - t + y >= 0): ##warunki aby nie bralo wartosci z poza zdjecia
                             R.append(original_px[i - t + x, j - t + y][0])
                             G.append(original_px[i - t + x, j - t + y][1])
                             B.append(original_px[i - t + x, j - t + y][2])
-
-                ##print(R, G, B)
                 tmp_px[i, j] = (int(statistics.median(R)), int(statistics.median(G)), int(statistics.median(B)))
                 R.clear()
                 G.clear()

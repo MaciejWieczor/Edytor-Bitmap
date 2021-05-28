@@ -91,7 +91,7 @@ def test():
 
     global image_id
     global img
-    root.median_filter(3)
+    root.median_filter(9)
     img = ImageTk.PhotoImage(root.image)
     image_id = root.canvas.create_image(20,20, anchor = tk.NW, image=img)
 
@@ -122,6 +122,7 @@ rotate_right_button.pack(before = root.canvas)
 rotate_left_button = tk.Button(root.window, text="rotate left", command=rotate_left)
 rotate_left_button.pack(before = root.canvas)
 
+##przyciski do testowania filtru, trzeba dodac przyciskt i pole do wyboru rozmiaru okna
 test = tk.Button(root.window, text="test", command=test)
 test.pack(before = root.canvas)
 
