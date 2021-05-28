@@ -20,7 +20,10 @@ root.canvas.pack()
 img = ImageTk.PhotoImage(root.image)
 image_id = root.canvas.create_image(20,20, anchor = tk.NW, image=img) 
 size_var = 4        #domyślna wartość szerokości okna filtru medianowego
-slider_var = 1      #domyślna wartość na sliderze
+slider_var_R = 1      #domyślna wartość na sliderze
+slider_var_G = 1      #domyślna wartość na sliderze
+slider_var_B = 1      #domyślna wartość na sliderze
+
 #funkcje poniżej są do przycisków zdefiniowanych na dole 
 
 #funkcje zdefiniowałem poniżej bo 
@@ -106,10 +109,14 @@ def rgb_slider():
 
     global image_id
     global img
-    global slider_var
+    global slider_var_R
+    global slider_var_G
+    global slider_var_B
     try:
-        slider_var = slide_RGB.get()
-        print(slider_var)
+        slider_var_R = slide_RGB1.get()
+        slider_var_G = slide_RGB2.get()
+        slider_var_B = slide_RGB3.get()
+        print(f"R = {slider_var_R}, G = {slider_var_G}, B = {slider_var_B} ")
     except:
         return None
     #tu miejsce na funkcję z rgb
@@ -134,15 +141,28 @@ functionframe.pack(before = root.canvas)
 fieldframe = tk.Frame(root.window)
 fieldframe.pack(before = root.canvas)
 
+slideframe = tk.Frame(root.window)
+slideframe.pack(before = root.canvas)
+
 
 size_varr=tk.StringVar(value=str(size_var))
-med_window = tk.Label(fieldframe , text = 'Długość okna filtru medianowego', font=('calibre',10, 'bold'))
+med_window1 = tk.Label(fieldframe , text = 'Długość okna filtru medianowego', font=('calibre',10, 'bold'))
 med_window = tk.Entry(fieldframe ,textvariable = size_varr, font=('calibre',10,'normal'))
-med_window.pack(side = tk.LEFT)
+med_window1.pack(side = tk.LEFT)
 med_window.pack(side = tk.LEFT)
 
-slide_RGB = tk.Scale(fieldframe, from_=1, to=2 , resolution = 0.1, orient=tk.HORIZONTAL)
-slide_RGB.pack(side = tk.LEFT)
+slide_RGB_label1 = tk.Label(slideframe , text = 'R', font=('calibre',10, 'bold'))
+slide_RGB_label1.pack(side = tk.LEFT)
+slide_RGB1 = tk.Scale(slideframe, from_=1, to=2 , resolution = 0.1, orient=tk.HORIZONTAL)
+slide_RGB1.pack(side = tk.LEFT)
+slide_RGB_label2 = tk.Label(slideframe , text = 'G', font=('calibre',10, 'bold'))
+slide_RGB_label2.pack(side = tk.LEFT)
+slide_RGB2 = tk.Scale(slideframe, from_=1, to=2 , resolution = 0.1, orient=tk.HORIZONTAL)
+slide_RGB2.pack(side = tk.LEFT)
+slide_RGB_label3 = tk.Label(slideframe , text = 'B', font=('calibre',10, 'bold'))
+slide_RGB_label3.pack(side = tk.LEFT)
+slide_RGB3 = tk.Scale(slideframe, from_=1, to=2 , resolution = 0.1, orient=tk.HORIZONTAL)
+slide_RGB3.pack(side = tk.LEFT)
 
 exit_button = tk.Button(upperframe, text="Exit", command=root.window.destroy)
 exit_button.pack(side = tk.LEFT)
