@@ -124,9 +124,6 @@ class GUI:
         tmp_px = tmp.load()
         original_px = self.image.load()
 
-        if(size%2 == 0): ##niech bierze tylko nieparzyste okna na razie
-            size = size - 1
-
         t = math.floor(size/2)
         R = []
         G = []
