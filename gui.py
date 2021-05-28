@@ -148,3 +148,4 @@ class GUI:
                 B.clear()
 
         self.image = tmp
+        self.undo_queue.append(self.image)

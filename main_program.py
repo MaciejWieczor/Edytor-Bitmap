@@ -91,7 +91,7 @@ def test():
 
     global image_id
     global img
-    root.median_filter(9)
+    root.median_filter(3)
     img = ImageTk.PhotoImage(root.image)
     image_id = root.canvas.create_image(20,20, anchor = tk.NW, image=img)
 
