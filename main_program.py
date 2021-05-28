@@ -87,6 +87,16 @@ def undo():
     img = ImageTk.PhotoImage(root.image)
     image_id = root.canvas.create_image(20,20, anchor = tk.NW, image=img)
 
+def test():
+
+    global image_id
+    global img
+    root.median_filter(4)
+    img = ImageTk.PhotoImage(root.image)
+    image_id = root.canvas.create_image(20,20, anchor = tk.NW, image=img)
+
+
+
 #przyciski
 #tu można definiować nowe przyciski tak jak widać poniżej
 
@@ -117,6 +127,11 @@ rotate_right_button = tk.Button(functionframe, text="rotate right", command=rota
 rotate_right_button.pack(side = tk.LEFT)
 rotate_left_button = tk.Button(functionframe, text="rotate left", command=rotate_left)
 rotate_left_button.pack(side = tk.LEFT)
+
+##przyciski do testowania filtru, trzeba dodac przyciskt i pole do wyboru rozmiaru okna
+test = tk.Button(root.window, text="test", command=test)
+test.pack(before = root.canvas)
+
 
 root.window.mainloop()
 
