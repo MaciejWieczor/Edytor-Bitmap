@@ -7,6 +7,7 @@ import sys
 import os
 import math
 import statistics
+import multiprocessing
 
 class GUI:
     def __init__(self):
@@ -29,6 +30,8 @@ class GUI:
 
         self.undo_queue = []
         self.undo_queue.append(self.image)
+        self.cursor_x = 0
+        self.cursor_y = 0
         
     def window_init(self):
         return tkinter.Tk()
@@ -146,3 +149,8 @@ class GUI:
 
         self.image = tmp
         self.undo_queue.append(self.image)
+    
+    def set_cursor_position(self, x, y):
+        self.cursor_x = x
+        self.cursor_y = y
+        print('{} {}'.format(self.cursor_x, self.cursor_y))

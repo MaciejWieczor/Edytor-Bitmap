@@ -19,6 +19,8 @@ root = GUI()
 root.canvas.pack()
 img = ImageTk.PhotoImage(root.image)
 image_id = root.canvas.create_image(20,20, anchor = tk.NW, image=img) 
+x = 0
+y = 0
 size_var = 4        #domyślna wartość szerokości okna filtru medianowego
 slider_var_R = 1      #domyślna wartość na sliderze
 slider_var_G = 1      #domyślna wartość na sliderze
@@ -78,10 +80,14 @@ def rotate_left():
 
     global image_id
     global img
-    root.canvas.delete(image_id)
+    #root.canvas.delete(image_id)
     root.rotate("left")
     img = ImageTk.PhotoImage(root.image)
     image_id = root.canvas.create_image(20,20, anchor = tk.NW, image=img)
+
+def spin(event):
+    rotate_left()
+    resize1()
 
 def undo():
     
@@ -122,6 +128,16 @@ def rgb_slider():
     #tu miejsce na funkcję z rgb
     img = ImageTk.PhotoImage(root.image)
     image_id = root.canvas.create_image(20,20, anchor = tk.NW, image=img)
+
+def motion_get(event):
+    global x
+    global y
+    x, y = event.x, event.y
+
+def motion_save(event):
+    global x
+    global y
+    root.set_cursor_position(x, y)
 
 
 
@@ -188,6 +204,10 @@ filtr_med.pack(side = tk.LEFT)
 
 RGB_button = tk.Button(functionframe, text="Korekta RGB", command=rgb_slider)
 RGB_button.pack(side = tk.LEFT)
+
+root.window.bind('<Motion>', motion_get)
+root.window.bind('<Motion>', spin)
+root.window.bind('<KeyPress-Control_L>', motion_save)
 
 
 root.window.mainloop()
