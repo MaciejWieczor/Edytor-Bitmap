@@ -18,7 +18,11 @@ root = GUI()
 
 root.canvas.pack()
 img = ImageTk.PhotoImage(root.image)
-image_id = root.canvas.create_image(20,20, anchor = tk.NW, image=img) 
+image_id = root.canvas.create_image(20,20, anchor = tk.NW, image=img)
+cursor_mode = tk.IntVar()
+cursor_lock = False
+x = 0
+y = 0
 size_var = 4        #domyślna wartość szerokości okna filtru medianowego
 slider_var_R = 1      #domyślna wartość na sliderze
 slider_var_G = 1      #domyślna wartość na sliderze
@@ -78,10 +82,14 @@ def rotate_left():
 
     global image_id
     global img
-    root.canvas.delete(image_id)
+    #root.canvas.delete(image_id)
     root.rotate("left")
     img = ImageTk.PhotoImage(root.image)
     image_id = root.canvas.create_image(20,20, anchor = tk.NW, image=img)
+
+def spin(event):
+    rotate_left()
+    resize1()
 
 def undo():
     
@@ -122,6 +130,31 @@ def rgb_slider():
     root.RGB_levels(slider_var_R,  slider_var_G,  slider_var_B)
     img = ImageTk.PhotoImage(root.image)
     image_id = root.canvas.create_image(20,20, anchor = tk.NW, image=img)
+
+def motion_get(event):
+    global cursor_mode
+    test = cursor_mode.get()
+    root.cursor_mode = test
+    root.canvas_position_x = root.canvas.winfo_x()
+    root.canvas_position_y = root.canvas.winfo_y()
+
+def motion_save_start(event):
+    global cursor_lock
+    global x
+    global y
+    if root.cursor_mode == 1 and cursor_lock == False:
+        x, y = event.x, event.y
+        root.set_cursor_position(x, y, 0)
+        cursor_lock = True
+
+def motion_save_end(event):
+    global cursor_lock
+    global x
+    global y
+    if root.cursor_mode == 1 and cursor_lock == True:
+        x, y = event.x, event.y
+        root.set_cursor_position(x, y, 1)
+        cursor_lock = False
 
 
 
@@ -177,6 +210,7 @@ minus_size_button.pack(side = tk.LEFT)
 undo_button = tk.Button(functionframe, text="undo", command=undo)
 undo_button.pack(side = tk.LEFT)
 
+
 rotate_right_button = tk.Button(functionframe, text="rotate right", command=rotate_right)
 rotate_right_button.pack(side = tk.LEFT)
 rotate_left_button = tk.Button(functionframe, text="rotate left", command=rotate_left)
@@ -189,6 +223,12 @@ filtr_med.pack(side = tk.LEFT)
 RGB_button = tk.Button(functionframe, text="Korekta RGB", command=rgb_slider)
 RGB_button.pack(side = tk.LEFT)
 
+mode_selector = tk.Checkbutton(functionframe, text="Cursor ON", variable=cursor_mode)
+mode_selector.pack(side = tk.LEFT)
+
+root.window.bind('<Motion>', motion_get)
+root.window.bind('<KeyPress-Control_L>', motion_save_start)
+root.window.bind('<KeyRelease-Control_L>', motion_save_end)
 
 root.window.mainloop()
 
