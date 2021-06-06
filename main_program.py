@@ -131,6 +131,21 @@ def rgb_slider():
     img = ImageTk.PhotoImage(root.image)
     image_id = root.canvas.create_image(20,20, anchor = tk.NW, image=img)
 
+    ## nowe funkcje do zmiany kontrastu i jasnosci, trzeba dodac jakis wybor wartosci do kazdej, obie biora wartosci od -255 do 255
+def contrast_adjustment():
+    global image_id
+    global img
+    root.contrast(255)
+    img = ImageTk.PhotoImage(root.image)
+    image_id = root.canvas.create_image(20,20, anchor = tk.NW, image=img)
+
+def brightness_adjustment():
+    global image_id
+    global img
+    root.brightness(50)
+    img = ImageTk.PhotoImage(root.image)
+    image_id = root.canvas.create_image(20,20, anchor = tk.NW, image=img)
+
 def motion_get(event):
     global cursor_mode
     test = cursor_mode.get()
@@ -155,8 +170,6 @@ def motion_save_end(event):
         x, y = event.x, event.y
         root.set_cursor_position(x, y, 1)
         cursor_lock = False
-
-
 
 #przyciski
 #tu można definiować nowe przyciski tak jak widać poniżej
@@ -216,7 +229,10 @@ rotate_right_button.pack(side = tk.LEFT)
 rotate_left_button = tk.Button(functionframe, text="rotate left", command=rotate_left)
 rotate_left_button.pack(side = tk.LEFT)
 
-##przyciski do testowania filtru, trzeba dodac przyciskt i pole do wyboru rozmiaru okna
+##test kontrastu
+test = tk.Button(functionframe, text="test", command=brightness_adjustment)
+test.pack(side = tk.LEFT)
+
 filtr_med = tk.Button(functionframe, text="Filtr Medianowy", command=filtr_med_func)
 filtr_med.pack(side = tk.LEFT)
 

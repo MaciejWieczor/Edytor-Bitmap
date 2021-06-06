@@ -142,7 +142,7 @@ class GUI:
                 
     def median_filter(self, size):
 
-        tmp = PIL.Image.new("RGB", (self.size[0], self.size[1]), 0)
+        tmp = self.image.copy()
         tmp_px = tmp.load()
         original_px = self.image.load()
 
@@ -167,9 +167,6 @@ class GUI:
                     G.clear()
                     B.clear()
         if (self.cursor_mode == 1): #tylko kursor
-            for i in range(0, self.size[0]):
-                for j in range(0, self.size[1]):
-                    tmp_px[i, j] = (original_px[i,j][0] ,original_px[i,j][1],original_px[i,j][2])
 
                     ##petle to ladowania wartosci z okna
             for i in range(self.cursor_x-20-self.canvas_position_x, self.cursor_x1-20-self.canvas_position_x):
@@ -197,3 +194,48 @@ class GUI:
             self.cursor_x1 = x
             self.cursor_y1 = y
             print('End = {} {}'.format(self.cursor_x1, self.cursor_y1))
+
+    def contrast(self, desired_contrast):
+
+        if(desired_contrast <= 255 and desired_contrast >= -255):
+
+            tmp = self.image.copy()
+            px = tmp.load()
+
+            if (self.cursor_mode == 1):
+                range_i = range(self.cursor_x-20-self.canvas_position_x, self.cursor_x1-20-self.canvas_position_x)
+                range_j = range(self.cursor_y-20-self.canvas_position_y, self.cursor_y1-20-self.canvas_position_y)
+            else:
+                range_i = range(0, self.size[0])
+                range_j = range(0, self.size[1])
+
+            F = 259*(desired_contrast + 255)/(255*(259 - desired_contrast))
+            for i in range_i:
+                for j in range_j:
+                    px[i,j] = (int(F*(px[i,j][0]-128)+128), int(F*(px[i,j][1]-128)+128), int(F*(px[i,j][2]-128)+128))
+        
+            self.image = tmp
+            self.undo_queue.append(self.image)
+       
+    def brightness(self, brightness):
+
+        if(brightness <= 255 and brightness >= -255):
+
+            tmp = self.image.copy()
+            px = tmp.load()
+
+            if (self.cursor_mode == 1):
+                range_i = range(self.cursor_x-20-self.canvas_position_x, self.cursor_x1-20-self.canvas_position_x)
+                range_j = range(self.cursor_y-20-self.canvas_position_y, self.cursor_y1-20-self.canvas_position_y)
+            else:
+                range_i = range(0, self.size[0])
+                range_j = range(0, self.size[1])
+
+        
+            for i in range_i:
+                for j in range_j:
+                    px[i,j] = (int(px[i,j][0] + brightness), int(px[i,j][1] + brightness), int(px[i,j][2] + brightness))
+
+            self.image = tmp
+            self.undo_queue.append(self.image)
+
