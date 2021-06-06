@@ -32,6 +32,11 @@ class GUI:
         self.undo_queue.append(self.image)
         self.cursor_x = 0
         self.cursor_y = 0
+        self.cursor_x1 = 0
+        self.cursor_y1 = 0
+        self.cursor_mode = 0
+        self.canvas_position_x = 0
+        self.canvas_position_y = 0
         
     def window_init(self):
         return tkinter.Tk()
@@ -112,14 +117,29 @@ class GUI:
 
     def RGB_levels(self, R, G, B):
         
-        if(R <= 2 and G <= 2 and B <= 2):
-            px = self.image.load()        ##zwaraca tablice krotek rgb, jak sie zmieni krotke, automatycznie sie zmieni pixel na self.image 
+        if (self.cursor_mode == 0): #caly ekran
+            if(R <= 2 and G <= 2 and B <= 2):
 
-            for i in range(0, self.image.size[0]):
-                for j in range(0, self.image.size[1]):
-                    px[i,j] = (int(px[i,j][0] * R), int(px[i,j][1] * G), int(px[i,j][2] * B))
+                tmp = self.image.copy()
+                px = tmp.load()        ##zwaraca tablice krotek rgb, jak sie zmieni krotke, automatycznie sie zmieni pixel na self.image 
 
-        self.undo_queue.append(self.image)
+                for i in range(0, tmp.size[0]):
+                    for j in range(0, tmp.size[1]):
+                        px[i,j] = (int(px[i,j][0] * R), int(px[i,j][1] * G), int(px[i,j][2] * B))
+                self.undo_queue.append(tmp)
+                self.image = tmp
+        if (self.cursor_mode == 1): #cursor mode
+            if(R <= 2 and G <= 2 and B <= 2):
+
+                tmp = self.image.copy()
+                px = tmp.load()        ##zwaraca tablice krotek rgb, jak sie zmieni krotke, automatycznie sie zmieni pixel na self.image 
+
+                for i in range(self.cursor_x-20-self.canvas_position_x, self.cursor_x1-20-self.canvas_position_x):
+                    for j in range(self.cursor_y-20-self.canvas_position_y, self.cursor_y1-20-self.canvas_position_y):
+                        px[i,j] = (int(px[i,j][0] * R), int(px[i,j][1] * G), int(px[i,j][2] * B))
+                self.undo_queue.append(tmp)
+                self.image = tmp
+
 
     def median_filter(self, size):
 
@@ -132,25 +152,49 @@ class GUI:
         G = []
         B = []
 
-        for i in range(0, self.size[0]):
-            for j in range(0, self.size[1]):
+        if (self.cursor_mode == 0): #caly ekran
+            for i in range(0, self.size[0]):
+                for j in range(0, self.size[1]):
 
-                ##petle to ladowania wartosci z okna
-                for x in range (0, size):
-                    for y in range(0, size):
-                        if(j + y <= self.size[1] and i + x <= self.size[0] and i - t + x >= 0 and j - t + y >= 0): ##warunki aby nie bralo wartosci z poza zdjecia
-                            R.append(original_px[i - t + x, j - t + y][0])
-                            G.append(original_px[i - t + x, j - t + y][1])
-                            B.append(original_px[i - t + x, j - t + y][2])
-                tmp_px[i, j] = (int(statistics.median(R)), int(statistics.median(G)), int(statistics.median(B)))
-                R.clear()
-                G.clear()
-                B.clear()
+                    ##petle to ladowania wartosci z okna
+                    for x in range (0, size):
+                        for y in range(0, size):
+                            if(j + y <= self.size[1] and i + x <= self.size[0] and i - t + x >= 0 and j - t + y >= 0): ##warunki aby nie bralo wartosci z poza zdjecia
+                                R.append(original_px[i - t + x, j - t + y][0])
+                                G.append(original_px[i - t + x, j - t + y][1])
+                                B.append(original_px[i - t + x, j - t + y][2])
+                    tmp_px[i, j] = (int(statistics.median(R)), int(statistics.median(G)), int(statistics.median(B)))
+                    R.clear()
+                    G.clear()
+                    B.clear()
+        if (self.cursor_mode == 1): #tylko kursor
+            for i in range(0, self.size[0]):
+                for j in range(0, self.size[1]):
+                    tmp_px[i, j] = (original_px[i,j][0] ,original_px[i,j][1],original_px[i,j][2])
+
+                    ##petle to ladowania wartosci z okna
+            for i in range(self.cursor_x-20-self.canvas_position_x, self.cursor_x1-20-self.canvas_position_x):
+                for j in range(self.cursor_y-20-self.canvas_position_y, self.cursor_y1-20-self.canvas_position_y):
+                    for x in range (0, size):
+                        for y in range(0, size):
+                            if(j + y <= self.size[1] and i + x <= self.size[0] and i - t + x >= 0 and j - t + y >= 0): ##warunki aby nie bralo wartosci z poza zdjecia
+                                R.append(original_px[i - t + x, j - t + y][0])
+                                G.append(original_px[i - t + x, j - t + y][1])
+                                B.append(original_px[i - t + x, j - t + y][2])
+                    tmp_px[i, j] = (int(statistics.median(R)), int(statistics.median(G)), int(statistics.median(B)))
+                    R.clear()
+                    G.clear()
+                    B.clear()
 
         self.image = tmp
         self.undo_queue.append(self.image)
     
-    def set_cursor_position(self, x, y):
-        self.cursor_x = x
-        self.cursor_y = y
-        print('{} {}'.format(self.cursor_x, self.cursor_y))
+    def set_cursor_position(self, x, y, select):
+        if(select == 0):
+            self.cursor_x = x
+            self.cursor_y = y
+            print('Start = {} {}'.format(self.cursor_x, self.cursor_y))
+        else:
+            self.cursor_x1 = x
+            self.cursor_y1 = y
+            print('End = {} {}'.format(self.cursor_x1, self.cursor_y1))
