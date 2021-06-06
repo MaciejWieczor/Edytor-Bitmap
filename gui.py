@@ -76,7 +76,7 @@ class GUI:
 
     def resize(self, mod):      #funkcja do zmiany rozmiaru - trochę do 
                                 #poprawy bo kiepsko skaluje
-        self.image = self.image.resize((int(self.width*mod), int(self.height*mod)))
+        self.image = self.image.resize((int(self.size[0]*mod), int(self.size[1]*mod)))
         self.size = self.image.size
         self.width = self.size[0]+30
         self.height = self.size[1]+30
@@ -116,7 +116,6 @@ class GUI:
             self.undo_queue.pop(0)
 
     def RGB_levels(self, R, G, B):
-        
         if (self.cursor_mode == 0): #caly ekran
             if(R <= 2 and G <= 2 and B <= 2):
 
@@ -140,7 +139,7 @@ class GUI:
                 self.undo_queue.append(tmp)
                 self.image = tmp
 
-
+                
     def median_filter(self, size):
 
         tmp = PIL.Image.new("RGB", (self.size[0], self.size[1]), 0)
