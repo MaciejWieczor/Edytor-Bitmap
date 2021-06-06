@@ -230,7 +230,7 @@ rotate_left_button = tk.Button(functionframe, text="rotate left", command=rotate
 rotate_left_button.pack(side = tk.LEFT)
 
 ##test kontrastu
-test = tk.Button(functionframe, text="test", command=brightness_adjustment)
+test = tk.Button(functionframe, text="test", command=contrast_adjustment)
 test.pack(side = tk.LEFT)
 
 filtr_med = tk.Button(functionframe, text="Filtr Medianowy", command=filtr_med_func)
@@ -247,7 +247,3 @@ root.window.bind('<KeyPress-Control_L>', motion_save_start)
 root.window.bind('<KeyRelease-Control_L>', motion_save_end)
 
 root.window.mainloop()
-
-
-
-
