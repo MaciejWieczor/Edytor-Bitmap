@@ -223,3 +223,105 @@ class GUI:
             self.image = tmp
             self.undo_queue.append(self.image)
 
+    def sharpening_filter(self, sharpening_force):
+
+        tmp = self.image.copy()
+        px = tmp.load()
+        original_px = self.image.load()
+
+        if (self.cursor_mode == 1):
+            range_i = range(self.cursor_x-20-self.canvas_position_x + 1, self.cursor_x1-20-self.canvas_position_x - 1)
+            range_j = range(self.cursor_y-20-self.canvas_position_y + 1, self.cursor_y1-20-self.canvas_position_y - 1)
+        else:
+            range_i = range(1, self.size[0] - 1)
+            range_j = range(1, self.size[1] - 1)
+
+        kernel = [[0, -1 * sharpening_force, 0],[-1 * sharpening_force, 4 * sharpening_force + 1, -1 * sharpening_force],[0, -1 * sharpening_force, 0]]
+        ##na dobra sprawe, ten kernel to jest identity kernel + kernel od szukania krawedzi, czyli znalezione krawedzie nakleja na obraz i jest 
+        ##na swoj sposob wyostrzony w ten sposob
+
+        ##liczenie splotu jadra ze zdjeciem
+        for i in range_i:
+            for j in range_j:
+                tmp_R = 0
+                tmp_G = 0
+                tmp_B = 0
+                for ik in range(-1, 2):
+                    for jk in range(-1, 2):
+                        tmp_R += kernel[ik + 1][jk + 1] * original_px[i + ik, j + jk][0]
+                        tmp_G += kernel[ik + 1][jk + 1] * original_px[i + ik, j + jk][1]
+                        tmp_B += kernel[ik + 1][jk + 1] * original_px[i + ik, j + jk][2]
+                px[i,j] = (int(tmp_R), int(tmp_G), int(tmp_B))
+
+        self.image = tmp
+        self.undo_queue.append(self.image)
+
+    def kernel_filters(self, type):
+
+        tmp = self.image.copy()
+        px = tmp.load()
+        original_px = self.image.load()
+
+        ##wybor jadra
+        if(type == "edge_detection_1"):
+            kernel = [[1, 0, -1],[0, 0, 0],[-1, 0, 1]]
+            ik_range = range(-1, 2)
+            jk_range = range(-1, 2)
+            t = 1
+
+        elif(type == "edge_detection_2"):
+            kernel = [[0, -1, 0],[-1, 4, -1],[0, -1, 0]]
+            ik_range = range(-1, 2)
+            jk_range = range(-1, 2)
+            t = 1
+
+        elif(type == "edge_detection_3"):
+            kernel = [[-1, -1, -1],[-1, 8, -1],[-1, -1, -1]]
+            ik_range = range(-1, 2)
+            jk_range = range(-1, 2)
+            t = 1
+
+        elif(type == "box_blur"):
+            kernel = [[1/9, 1/9, 1/9],[1/9, 1/9, 1/9],[1/9, 1/9, 1/9]]
+            ik_range = range(-1, 2)
+            jk_range = range(-1, 2)
+            t = 1
+
+        elif(type == "gaussian_blur_3x3"):
+            kernel = [[1/16, 2/16, 1/16],[2/16, 4/16, 2/16],[1/16, 2/16, 1/16]]
+            ik_range = range(-1, 2)
+            jk_range = range(-1, 2)
+            t = 1
+
+        elif(type == "gaussian_blur_5x5"):
+            kernel = [[1/256, 4/256, 6/256, 4/256, 1/256],[4/256, 16/256, 24/256, 26/256, 4/256], [6/256, 24/256, 36/256, 24/256, 6/256], [4/256, 16/256, 24/256, 26/256, 4/256], [1/256, 4/256, 6/256, 4/256, 1/256]]
+            ik_range = range(-2, 3)
+            jk_range = range(-2, 3)
+            t = 2
+
+        ##tu mozna wiecej tych filtrow dodac, ale nie wiem czy jest sens, tez mi sie nie chcialo robic gaussowskiego filtru dla rozmiaru n
+
+
+        if (self.cursor_mode == 1):
+            range_i = range(self.cursor_x-20-self.canvas_position_x + t, self.cursor_x1-20-self.canvas_position_x - t)
+            range_j = range(self.cursor_y-20-self.canvas_position_y + t, self.cursor_y1-20-self.canvas_position_y - t)
+        else:
+            range_i = range(t, self.size[0] - t)
+            range_j = range(t, self.size[1] - t)
+
+
+        ##liczenie splotu jadra ze zdjeciem
+        for i in range_i:
+            for j in range_j:
+                tmp_R = 0
+                tmp_G = 0
+                tmp_B = 0
+                for ik in ik_range:
+                    for jk in jk_range:
+                        tmp_R += kernel[ik + t][jk + t] * original_px[i + ik, j + jk][0]
+                        tmp_G += kernel[ik + t][jk + t] * original_px[i + ik, j + jk][1]
+                        tmp_B += kernel[ik + t][jk + t] * original_px[i + ik, j + jk][2]
+                px[i,j] = (int(tmp_R), int(tmp_G), int(tmp_B))
+
+        self.image = tmp
+        self.undo_queue.append(self.image)

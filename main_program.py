@@ -146,6 +146,22 @@ def brightness_adjustment():
     img = ImageTk.PhotoImage(root.image)
     image_id = root.canvas.create_image(20,20, anchor = tk.NW, image=img)
 
+def sharpening():
+    global image_id
+    global img
+    root.sharpening_filter(0.2)
+    img = ImageTk.PhotoImage(root.image)
+    image_id = root.canvas.create_image(20,20, anchor = tk.NW, image=img)
+
+def kernel_filtering():
+
+    global image_id
+    global img
+    root.kernel_filters("gaussian_blur_5x5")
+    img = ImageTk.PhotoImage(root.image)
+    image_id = root.canvas.create_image(20,20, anchor = tk.NW, image=img)
+
+
 def motion_get(event):
     global cursor_mode
     test = cursor_mode.get()
@@ -230,7 +246,7 @@ rotate_left_button = tk.Button(functionframe, text="rotate left", command=rotate
 rotate_left_button.pack(side = tk.LEFT)
 
 ##test kontrastu
-test = tk.Button(functionframe, text="test", command=contrast_adjustment)
+test = tk.Button(functionframe, text="test", command=kernel_filtering)
 test.pack(side = tk.LEFT)
 
 filtr_med = tk.Button(functionframe, text="Filtr Medianowy", command=filtr_med_func)
