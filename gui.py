@@ -56,6 +56,12 @@ class GUI:
                                               title = "Select a File",
                                               filetypes = (("JPGs",
                                                             "*.jpg*"),
+                                                           ("JPEGs",
+                                                            "*.jpeg*"),
+                                                           ("PNGs",
+                                                            "*.png*"),
+                                                            ("BMPs",
+                                                            "*.bmp*"),
                                                            ("all files",
                                                             "*.*")))
       

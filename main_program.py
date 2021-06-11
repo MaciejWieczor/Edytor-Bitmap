@@ -24,6 +24,7 @@ cursor_lock = False
 x = 0
 y = 0
 size_var = 4        #domyślna wartość szerokości okna filtru medianowego
+param_255_var = 0     #domyślna wartość parametru 0-255
 slider_var_R = 1      #domyślna wartość na sliderze
 slider_var_G = 1      #domyślna wartość na sliderze
 slider_var_B = 1      #domyślna wartość na sliderze
@@ -132,32 +133,88 @@ def rgb_slider():
     image_id = root.canvas.create_image(20,20, anchor = tk.NW, image=img)
 
     ## nowe funkcje do zmiany kontrastu i jasnosci, trzeba dodac jakis wybor wartosci do kazdej, obie biora wartosci od -255 do 255
-def contrast_adjustment():
+def contrast_adjustment():  #do zrobienia
     global image_id
     global img
-    root.contrast(255)
+    global param_255_var
+    try:
+        param_255_var = int(param_255.get())
+    except:
+        return None
+    root.contrast(param_255_var)
     img = ImageTk.PhotoImage(root.image)
     image_id = root.canvas.create_image(20,20, anchor = tk.NW, image=img)
 
-def brightness_adjustment():
+def brightness_adjustment():  #do zrobienia
     global image_id
     global img
-    root.brightness(50)
+    global param_255_var
+    try:
+        param_255_var = int(param_255.get())
+    except:
+        return None
+    root.brightness(param_255_var)
     img = ImageTk.PhotoImage(root.image)
     image_id = root.canvas.create_image(20,20, anchor = tk.NW, image=img)
 
-def sharpening():
+def sharpening():  #do zrobienia
     global image_id
     global img
-    root.sharpening_filter(0.2)
+    global param_255_var
+    try:
+        param_255_var = int(param_255.get())
+    except:
+        return None
+    scaled_param = float(param_255_var / 255)
+    root.sharpening_filter(scaled_param)
     img = ImageTk.PhotoImage(root.image)
     image_id = root.canvas.create_image(20,20, anchor = tk.NW, image=img)
 
-def kernel_filtering():
+def gaussian_blur_5x5():
 
     global image_id
     global img
     root.kernel_filters("gaussian_blur_5x5")
+    img = ImageTk.PhotoImage(root.image)
+    image_id = root.canvas.create_image(20,20, anchor = tk.NW, image=img)
+
+def gaussian_blur_3x3():
+
+    global image_id
+    global img
+    root.kernel_filters("gaussian_blur_3x3")
+    img = ImageTk.PhotoImage(root.image)
+    image_id = root.canvas.create_image(20,20, anchor = tk.NW, image=img)
+
+def box_blur():
+
+    global image_id
+    global img
+    root.kernel_filters("box_blur")
+    img = ImageTk.PhotoImage(root.image)
+    image_id = root.canvas.create_image(20,20, anchor = tk.NW, image=img)
+
+def edge_detection_1():
+
+    global image_id
+    global img
+    root.kernel_filters("edge_detection_1")
+    img = ImageTk.PhotoImage(root.image)
+    image_id = root.canvas.create_image(20,20, anchor = tk.NW, image=img)
+
+def edge_detection_2():
+
+    global image_id
+    global img
+    root.kernel_filters("edge_detection_2")
+    img = ImageTk.PhotoImage(root.image)
+    image_id = root.canvas.create_image(20,20, anchor = tk.NW, image=img)
+
+def edge_detection_3():
+
+    global image_id
+    global img
+    root.kernel_filters("edge_detection_3")
     img = ImageTk.PhotoImage(root.image)
     image_id = root.canvas.create_image(20,20, anchor = tk.NW, image=img)
 
@@ -200,8 +257,16 @@ upperframe.pack(before = root.canvas)
 functionframe = tk.Frame(root.window)
 functionframe.pack(before = root.canvas)
 
+functionframe1 = tk.Frame(root.window)
+functionframe1.pack(before = root.canvas)
+
+functionframe2 = tk.Frame(root.window)
+functionframe2.pack(before = root.canvas)
+
 fieldframe = tk.Frame(root.window)
 fieldframe.pack(before = root.canvas)
+fieldframe1 = tk.Frame(root.window)
+fieldframe1.pack(before = root.canvas)
 
 slideframe = tk.Frame(root.window)
 slideframe.pack(before = root.canvas)
@@ -212,6 +277,12 @@ med_window1 = tk.Label(fieldframe , text = 'Długość okna filtru medianowego',
 med_window = tk.Entry(fieldframe ,textvariable = size_varr, font=('calibre',10,'normal'))
 med_window1.pack(side = tk.LEFT)
 med_window.pack(side = tk.LEFT)
+
+param_255=tk.StringVar(value=str(param_255_var))
+param_1 = tk.Label(fieldframe1 , text = 'Parametr 0-255', font=('calibre',10, 'bold'))
+param = tk.Entry(fieldframe1 ,textvariable = param_255, font=('calibre',10,'normal'))
+param_1.pack(side = tk.LEFT)
+param.pack(side = tk.LEFT)
 
 slide_RGB_label1 = tk.Label(slideframe , text = 'R', font=('calibre',10, 'bold'))
 slide_RGB_label1.pack(side = tk.LEFT)
@@ -246,14 +317,38 @@ rotate_left_button = tk.Button(functionframe, text="rotate left", command=rotate
 rotate_left_button.pack(side = tk.LEFT)
 
 ##test kontrastu
-test = tk.Button(functionframe, text="test", command=kernel_filtering)
-test.pack(side = tk.LEFT)
+gaussian_blur = tk.Button(functionframe2, text="Gaussian Blur 5x5", command=gaussian_blur_5x5)
+gaussian_blur.pack(side = tk.LEFT)
 
-filtr_med = tk.Button(functionframe, text="Filtr Medianowy", command=filtr_med_func)
+gaussian_blur3 = tk.Button(functionframe2, text="Gaussian Blur 3x3", command=gaussian_blur_3x3)
+gaussian_blur3.pack(side = tk.LEFT)
+
+box_blurr = tk.Button(functionframe2, text="Box Blur", command=box_blur)
+box_blurr.pack(side = tk.LEFT)
+
+edgy_1 = tk.Button(functionframe2, text="Edge Detection 1", command=edge_detection_1)
+edgy_1.pack(side = tk.LEFT)
+
+edgy_2 = tk.Button(functionframe2, text="Edge Detection 2", command=edge_detection_2)
+edgy_2.pack(side = tk.LEFT)
+
+edgy_3 = tk.Button(functionframe2, text="Edge Detection 3", command=edge_detection_3)
+edgy_3.pack(side = tk.LEFT)
+
+filtr_med = tk.Button(functionframe1, text="Filtr Medianowy", command=filtr_med_func)
 filtr_med.pack(side = tk.LEFT)
 
-RGB_button = tk.Button(functionframe, text="Korekta RGB", command=rgb_slider)
+RGB_button = tk.Button(functionframe1, text="Korekta RGB", command=rgb_slider)
 RGB_button.pack(side = tk.LEFT)
+
+contrast = tk.Button(functionframe1, text="Korektra kontrastu", command=contrast_adjustment)
+contrast.pack(side = tk.LEFT)
+
+brightness = tk.Button(functionframe1, text="Korektra jasności", command=brightness_adjustment)
+brightness.pack(side = tk.LEFT)
+
+sharpness = tk.Button(functionframe1, text="Wyostrzanie", command=sharpening)
+sharpness.pack(side = tk.LEFT)
 
 mode_selector = tk.Checkbutton(functionframe, text="Cursor ON", variable=cursor_mode)
 mode_selector.pack(side = tk.LEFT)
