@@ -187,7 +187,7 @@ class GUI:
             self.cursor_y1 = y
             print('End = {} {}'.format(self.cursor_x1, self.cursor_y1))
 
-    def contrast(self, desired_contrast):           #operacja zmieniająca kontrast zdjęcia w skali 0-255
+    def contrast(self, desired_contrast):           #operacja zmieniająca kontrast zdjęcia w skali od -255 do 255
 
         if(desired_contrast <= 255 and desired_contrast >= -255):
 
@@ -209,7 +209,7 @@ class GUI:
             self.image = tmp
             self.undo_queue.append(self.image)
        
-    def brightness(self, brightness):       #funkcja zmienia poziom jasności w skali 0-255
+    def brightness(self, brightness):       #funkcja zmienia poziom jasności w skali od -255 do 255
 
         if(brightness <= 255 and brightness >= -255):
 

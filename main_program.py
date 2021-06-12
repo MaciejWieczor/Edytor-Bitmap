@@ -287,7 +287,7 @@ med_window1.pack(side = tk.LEFT)
 med_window.pack(side = tk.LEFT)
 
 param_255=tk.StringVar(value=str(param_255_var))
-param_1 = tk.Label(fieldframe1 , text = 'Parametr 0-255', font=('calibre',10, 'bold'))
+param_1 = tk.Label(fieldframe1 , text = 'Parametr (-255;255)', font=('calibre',10, 'bold'))
 param = tk.Entry(fieldframe1 ,textvariable = param_255, font=('calibre',10,'normal'))
 param_1.pack(side = tk.LEFT)
 param.pack(side = tk.LEFT)
