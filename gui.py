@@ -38,44 +38,47 @@ class GUI:
         self.canvas_position_x = 0
         self.canvas_position_y = 0
         
-    def window_init(self):
+    def window_init(self):      #inicjalizacja obiektu tkinter gui
         return tkinter.Tk()
 
-    def image(self):
+    def image(self):    #ładuje image przez PIL z browseFiles
         image = PIL.Image.open(self.obrazek_name)
-        return image         #ładuje image przez PIL z browseFiles
+        return image        
 
-    def canvas_init(self):
+    def canvas_init(self):  #inicjalizuje canvas na bazie rozmiaru zdjęcia
         sizee = max(self.size)+30
         canvas = tkinter.Canvas(self.window, width = sizee, height = sizee, highlightthickness=1, highlightbackground="black")
-        return canvas   #inicjalizuje canvas na bazie rozmiaru zdjęcia
+        return canvas   
 
-    @staticmethod
+    @staticmethod       #otwiera na windowsie okno dialogowe do znalezienia pliku jpg/jpeg/png/bmp i zwraca ten plik
     def browseFiles():
         filename = filedialog.askopenfilename(initialdir = "C:/Users/macie/Source/Repos/Edytor_bitmap",
                                               title = "Select a File",
                                               filetypes = (("JPGs",
                                                             "*.jpg*"),
+                                                           ("JPEGs",
+                                                            "*.jpeg*"),
+                                                           ("PNGs",
+                                                            "*.png*"),
+                                                            ("BMPs",
+                                                            "*.bmp*"),
                                                            ("all files",
                                                             "*.*")))
-      
-        # Change label contents
         print(filename)
-        return filename       #handler przycisku wczytania pierwszego obrazka
+        return filename       
 
     @staticmethod
-    def reset():
+    def reset():            # funkcja pozwala na wczytanie nowego zdjęcia 
         python = sys.executable
-        os.execl(python, python, * sys.argv)             #handler przycisku wczytania nowego obrazka
+        os.execl(python, python, * sys.argv)            
 
-    def save(self):
+    def save(self):     # funkcja pozwala na zapisania obecnego stanu zdjęcia do pliku jpg
         filename = filedialog.asksaveasfile(mode='w', defaultextension=".jpg")
         if not filename:
             return
-        self.image.save(filename)          #handler przycisku zapisania
+        self.image.save(filename)
 
-    def resize(self, mod):      #funkcja do zmiany rozmiaru - trochę do 
-                                #poprawy bo kiepsko skaluje
+    def resize(self, mod):      #funkcja do zmiany rozmiaru obrazu
         self.image = self.image.resize((int(self.size[0]*mod), int(self.size[1]*mod)))
         self.size = self.image.size
         self.width = self.size[0]+30
@@ -83,7 +86,7 @@ class GUI:
 
         self.undo_queue.append(self.image)
 
-    def rotate(self, direction):
+    def rotate(self, direction):    #wbudowana pythonowa funkcja do rotacji o 90 stopni 
 
         tmp = PIL.Image.new("RGB", (self.size[1], self.size[0]), 0)
         tmp_px = tmp.load()
@@ -105,18 +108,21 @@ class GUI:
 
         self.undo_queue.append(self.image)
 
-    def undo(self):
+    def undo(self):     #funkcja obsługująca listę ostatnich akcji na obrazie i pozwalająca cofać się  
+                        #do poprzedniej wersji
         if(len(self.undo_queue) > 1):
             self.image = self.undo_queue[len(self.undo_queue) - 2]
             self.undo_queue.pop()
             self.size = self.image.size
             self.width = self.size[0]+30
             self.height = self.size[1]+30
-        if(len(self.undo_queue) > 10): # pamieta tylko 10 ostanich obrazow
+        if(len(self.undo_queue) > 10):  # pamieta tylko 10 ostanich obrazow
             self.undo_queue.pop(0)
 
-    def RGB_levels(self, R, G, B):
+    def RGB_levels(self, R, G, B):      #zmienia składowe RGB pikseli (działa w skali od 0-2 (0 to czarne, 2 to pełny kolor))
 
+        # kawałek kodu który dla włączonego trybu kursora zmniejsza range wykonania operacji z 
+        #całego obrazu do tego wyznaczonego przez myszkę + LCtrl
         if (self.cursor_mode == 1):
             range_i = range(self.cursor_x-20-self.canvas_position_x, self.cursor_x1-20-self.canvas_position_x)
             range_j = range(self.cursor_y-20-self.canvas_position_y, self.cursor_y1-20-self.canvas_position_y)
@@ -127,14 +133,15 @@ class GUI:
         if(R <= 2 and G <= 2 and B <= 2):
 
             tmp = self.image.copy()
-            px = tmp.load()        ##zwaraca tablice krotek rgb, jak sie zmieni krotke, automatycznie sie zmieni pixel na self.image 
+            px = tmp.load()        ##zwraca tablice krotek rgb, jak sie zmieni krotke, automatycznie sie zmieni pixel na self.image 
             for i in range_i:
                 for j in range_j:
                     px[i,j] = (int(px[i,j][0] * R), int(px[i,j][1] * G), int(px[i,j][2] * B))
             self.undo_queue.append(tmp)
             self.image = tmp
          
-    def median_filter(self, size):
+    def median_filter(self, size):      #filtr medianowy - dość wolny - zmienia piksel na medianę wartości
+                                        #pikseli dookoła w kwadracie o boku wielkość "size"
 
         tmp = self.image.copy()
         tmp_px = tmp.load()
@@ -155,7 +162,7 @@ class GUI:
         for i in range_i:
             for j in range_j:
 
-                ##petle to ladowania wartosci z okna
+                ##petle do ladowania wartosci z okna
                 for x in range (0, size):
                     for y in range(0, size):
                         if(j + y <= self.size[1] and i + x <= self.size[0] and i - t + x >= 0 and j - t + y >= 0): ##warunki aby nie bralo wartosci z poza zdjecia
@@ -169,7 +176,8 @@ class GUI:
         self.image = tmp
         self.undo_queue.append(self.image)
     
-    def set_cursor_position(self, x, y, select):
+    def set_cursor_position(self, x, y, select):     #ustawia wartości self klasowe prostokąta który jest zaznaczany 
+                                                     #przez myszkę + LCtrl w trybie kursora
         if(select == 0):
             self.cursor_x = x
             self.cursor_y = y
@@ -179,7 +187,7 @@ class GUI:
             self.cursor_y1 = y
             print('End = {} {}'.format(self.cursor_x1, self.cursor_y1))
 
-    def contrast(self, desired_contrast):
+    def contrast(self, desired_contrast):           #operacja zmieniająca kontrast zdjęcia w skali od -255 do 255
 
         if(desired_contrast <= 255 and desired_contrast >= -255):
 
@@ -201,7 +209,7 @@ class GUI:
             self.image = tmp
             self.undo_queue.append(self.image)
        
-    def brightness(self, brightness):
+    def brightness(self, brightness):       #funkcja zmienia poziom jasności w skali od -255 do 255
 
         if(brightness <= 255 and brightness >= -255):
 
@@ -223,7 +231,7 @@ class GUI:
             self.image = tmp
             self.undo_queue.append(self.image)
 
-    def sharpening_filter(self, sharpening_force):
+    def sharpening_filter(self, sharpening_force):      #macierzowa operacja wyostrzająca obraz z daną "siłą" wyostrzenia
 
         tmp = self.image.copy()
         px = tmp.load()
@@ -256,7 +264,8 @@ class GUI:
         self.image = tmp
         self.undo_queue.append(self.image)
 
-    def kernel_filters(self, type):
+    def kernel_filters(self, type):     #grupa filtrów na bazie macierzy 3x3 (lub 5x5 dla jednego gaussian blura)
+                                        #typ filtru przekazuje się jako argument funkcji 
 
         tmp = self.image.copy()
         px = tmp.load()
